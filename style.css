@@ -38,6 +38,14 @@ article {
   border: red;
 }
 
+.pieces:before {
+  content: "\25E4";
+  font-size: 60px;
+  position: absolute;
+  left: 3px;
+  top: 20px;
+}
+
 p {
   margin: 20px auto;
   width: 1020px;

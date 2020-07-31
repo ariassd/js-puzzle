@@ -17,6 +17,8 @@ $(document).ready(function () {
   const pieceWith = 265;
   const pieceHeight = 305;
 
+  let colors = ["red", "yellow", "blue", "orange", "purple", "green"];
+
   const pieces = [
     { top: 0, left: 0, isOk: false, pos: 0 },
     { top: 0, left: 265, isOk: false, pos: 1 },
@@ -30,8 +32,11 @@ $(document).ready(function () {
   pieces.map((value) => {
     value.top = value.top + paddingTopLeft;
     value.left = value.left + paddingTopLeft;
+    value.color = colors.pop();
     const $new = $(`<div class="pieces" id="piece-${value.pos + 1}" data-pos="${value.pos + 1}"></div>`);
     $new.css("background", `url(assets/piece${value.pos + 1}.jpg) no-repeat`);
+    $new.css(`:before`, `color: ${value.color}`);
+
     const e = $("article").append($new);
   });
 
