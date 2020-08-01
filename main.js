@@ -21,15 +21,13 @@ $(document).ready(function () {
 
   let colors = ["red", "yellow", "blue", "orange", "purple", "green"];
 
-  const pieces = [
-    { top: 0, left: 0, isOk: false, pos: 0 },
-    { top: 0, left: pieceWith, isOk: false, pos: 1 },
-    { top: 0, left: pieceWith * 2, isOk: false, pos: 2 },
-
-    { top: pieceHeight, left: 0, isOk: false, pos: 3 },
-    { top: pieceHeight, left: pieceWith, isOk: false, pos: 4 },
-    { top: pieceHeight, left: pieceWith * 2, isOk: false, pos: 5 },
-  ];
+  let pieces = [];
+  let currPos = 0;
+  for (let indexRow = 0; indexRow < rows; indexRow++) {
+    for (let indexCol = 0; indexCol < cols; indexCol++) {
+      pieces.push({ top: pieceHeight * indexRow, left: pieceWith * indexCol, isOk: false, pos: currPos++ });
+    }
+  }
 
   pieces.map((value) => {
     value.top = value.top + paddingTopLeft;
