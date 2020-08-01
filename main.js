@@ -16,17 +16,19 @@ $(document).ready(function () {
   const paddingTopLeft = 30;
   const pieceWith = 265;
   const pieceHeight = 305;
+  const cols = 3;
+  const rows = 2;
 
   let colors = ["red", "yellow", "blue", "orange", "purple", "green"];
 
   const pieces = [
     { top: 0, left: 0, isOk: false, pos: 0 },
-    { top: 0, left: 265, isOk: false, pos: 1 },
-    { top: 0, left: 530, isOk: false, pos: 2 },
+    { top: 0, left: pieceWith, isOk: false, pos: 1 },
+    { top: 0, left: pieceWith * 2, isOk: false, pos: 2 },
 
-    { top: 305, left: 0, isOk: false, pos: 3 },
-    { top: 305, left: 265, isOk: false, pos: 4 },
-    { top: 305, left: 530, isOk: false, pos: 5 },
+    { top: pieceHeight, left: 0, isOk: false, pos: 3 },
+    { top: pieceHeight, left: pieceWith, isOk: false, pos: 4 },
+    { top: pieceHeight, left: pieceWith * 2, isOk: false, pos: 5 },
   ];
 
   pieces.map((value) => {
@@ -34,7 +36,11 @@ $(document).ready(function () {
     value.left = value.left + paddingTopLeft;
     value.color = colors.pop();
     const $new = $(`<div class="pieces" id="piece-${value.pos + 1}" data-pos="${value.pos + 1}"></div>`);
-    $new.css("background", `url(assets/piece${value.pos + 1}.jpg) no-repeat`);
+    // $new.css("background", `url(assets/piece${value.pos + 1}.jpg) no-repeat`);
+    $new.css("background", `url(assets/puzzle1.jpeg) no-repeat`);
+    $new.css("background-size", `${pieceWith * cols}px ${pieceHeight * rows}px`);
+    $new.css({ width: pieceWith, height: pieceHeight });
+    $new.css("background-position", `${(value.left - paddingTopLeft) * -1} ${(value.top - paddingTopLeft) * -1}`);
     $new.css(`:before`, `color: ${value.color}`);
 
     const e = $("article").append($new);
