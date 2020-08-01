@@ -1,8 +1,5 @@
-//  author Piers Rueb
-
 $(document).ready(function () {
   //  globals
-
   var tileClicked = false;
   var firstTileClicked;
   var secondTileClicked;
@@ -10,14 +7,21 @@ $(document).ready(function () {
   var leftPosFir = 0;
   var topPosSec = 0;
   var leftPosSec = 0;
-  var shuffle = Math.floor(Math.random() * 4 + 1);
   var moves = 0;
   var secs = 0;
-  const paddingTopLeft = 30;
-  const pieceWith = 265;
-  const pieceHeight = 305;
   const cols = 3;
-  const rows = 2;
+  const rows = 3;
+  const image = "assets/puzzle1.jpeg";
+  const imageSize = { width: 800, height: 600 };
+  const paddingTopLeft = 30;
+  const pieceWith = Math.ceil(imageSize.width / rows);
+  const pieceHeight = Math.ceil(imageSize.height / cols);
+
+  // console.log(pieceWith, pieceHeight);
+
+  const size = Utils.getImageSize(image);
+
+  size.then((d) => console.log(d));
 
   let colors = ["red", "yellow", "blue", "orange", "purple", "green"];
 
@@ -35,9 +39,10 @@ $(document).ready(function () {
     value.color = colors.pop();
     const $new = $(`<div class="pieces" id="piece-${value.pos + 1}" data-pos="${value.pos + 1}"></div>`);
     // $new.css("background", `url(assets/piece${value.pos + 1}.jpg) no-repeat`);
-    $new.css("background", `url(assets/puzzle1.jpeg) no-repeat`);
+    $new.css("background", `url(${image}) no-repeat`);
     $new.css("background-size", `${pieceWith * cols}px ${pieceHeight * rows}px`);
     $new.css({ width: pieceWith, height: pieceHeight });
+    $new.css(value);
     $new.css("background-position", `${(value.left - paddingTopLeft) * -1} ${(value.top - paddingTopLeft) * -1}`);
     $new.css(`:before`, `color: ${value.color}`);
 
@@ -45,35 +50,10 @@ $(document).ready(function () {
   });
 
   function shuffleTiles() {
-    if (shuffle == 1) {
-      $("#piece-1").css(pieces[5]);
-      $("#piece-2").css(pieces[2]);
-      $("#piece-3").css(pieces[4]);
-      $("#piece-4").css(pieces[1]);
-      $("#piece-5").css(pieces[3]);
-      $("#piece-6").css(pieces[0]);
-    } else if (shuffle == 2) {
-      $("#piece-1").css(pieces[3]);
-      $("#piece-2").css(pieces[0]);
-      $("#piece-3").css(pieces[4]);
-      $("#piece-4").css(pieces[1]);
-      $("#piece-5").css(pieces[5]);
-      $("#piece-6").css(pieces[2]);
-    } else if (shuffle == 3) {
-      $("#piece-1").css(pieces[2]);
-      $("#piece-2").css(pieces[0]);
-      $("#piece-3").css(pieces[4]);
-      $("#piece-4").css(pieces[5]);
-      $("#piece-5").css(pieces[1]);
-      $("#piece-6").css(pieces[3]);
-    } else if (shuffle == 4) {
-      $("#piece-1").css(pieces[2]);
-      $("#piece-2").css(pieces[5]);
-      $("#piece-3").css(pieces[1]);
-      $("#piece-4").css(pieces[4]);
-      $("#piece-5").css(pieces[0]);
-      $("#piece-6").css(pieces[3]);
-    }
+    const places = Utils.shuffleArray(JSON.parse(JSON.stringify(pieces)));
+    pieces.map((value) => {
+      $(`#piece-${value.pos + 1}`).css(places.pop());
+    });
   }
 
   $(window).load(function () {
