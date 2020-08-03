@@ -23,7 +23,8 @@ $(document).ready(function () {
 
   size.then((d) => console.log(d));
 
-  let colors = ["red", "yellow", "blue", "orange", "purple", "green"];
+  //let colors = ["red", "yellow", "blue", "orange", "purple", "green"];
+  let colors = Object.values(constants.PiecesColors);
 
   let pieces = [];
   let currPos = 0;
@@ -33,10 +34,10 @@ $(document).ready(function () {
     }
   }
 
-  pieces.map((value) => {
+  pieces.map((value, i) => {
     value.top = value.top + paddingTopLeft;
     value.left = value.left + paddingTopLeft;
-    value.color = colors.pop();
+    value.color = colors[i];
     const $new = $(`<div class="pieces" id="piece-${value.pos + 1}" data-pos="${value.pos + 1}"></div>`);
     // $new.css("background", `url(assets/piece${value.pos + 1}.jpg) no-repeat`);
     $new.css("background", `url(${image}) no-repeat`);
@@ -52,7 +53,9 @@ $(document).ready(function () {
   function shuffleTiles() {
     const places = Utils.shuffleArray(JSON.parse(JSON.stringify(pieces)));
     pieces.map((value) => {
-      $(`#piece-${value.pos + 1}`).css(places.pop());
+      const newPosition = places.pop();
+      $(`#piece-${value.pos + 1}`).css(newPosition);
+      $(`#piece-${value.pos + 1}`).attr("data-curr-pos", newPosition.pos + 1);
     });
   }
 
@@ -86,6 +89,12 @@ $(document).ready(function () {
       topPosSec = parseInt($(this).css("top"));
       leftPosSec = parseInt($(this).css("left"));
 
+      // set attributes
+      const firstCurrentPosition = $("#" + firstTileClicked).attr("data-curr-pos");
+      const secondCurrentPosition = $("#" + secondTileClicked).attr("data-curr-pos");
+      $("#" + firstTileClicked).attr("data-curr-pos", secondCurrentPosition);
+      $("#" + secondTileClicked).attr("data-curr-pos", firstCurrentPosition);
+
       //  animations
       $("#" + firstTileClicked).css({ top: topPosSec, left: leftPosSec });
       $("#" + secondTileClicked).css({ top: topPosFir, left: leftPosFir });
@@ -97,7 +106,7 @@ $(document).ready(function () {
       //  test for the win
       setTimeout(function () {
         pieces.forEach((p) => {
-          p.isOk = $(`#piece-${p.pos + 1}`).css("left") == `${p.left}px` && $(`#piece-${p.pos + 1}`).css("top") == `${p.top}px`;
+          p.isOk = $(`#piece-${p.pos + 1}`).attr("data-curr-pos") == $(`#piece-${p.pos + 1}`).attr("data-pos");
         });
 
         if (pieces.filter((i) => !i.isOk).length === 0) {
