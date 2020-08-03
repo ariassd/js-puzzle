@@ -3,9 +3,8 @@ const GAME_STATUS = {
   PLAYING: 1,
   STOPPED: 2,
 };
-
 // class Puzzle
-function Puzzle(imageSize, imageUrl, language, containerElement) {
+function Puzzle({ imageSize, imageUrl, language, containerElement, onGameOver }) {
   // Properties
   this.image = imageUrl;
   this.imageSize = imageSize;
@@ -21,8 +20,10 @@ function Puzzle(imageSize, imageUrl, language, containerElement) {
   this.pieceWith = Math.ceil(imageSize.width / this.rows);
   this.pieceHeight = Math.ceil(imageSize.height / this.cols);
   this.pieces = [];
-
   this.timerInterval;
+
+  // events
+  this.onGameOver = onGameOver;
 
   /**
    * Build and set positions to each piece in the puzzle
@@ -66,8 +67,10 @@ function Puzzle(imageSize, imageUrl, language, containerElement) {
     });
 
     if (this.pieces.filter((i) => !i.isOk).length === 0) {
-      $("p.message").text(LANG[this.language].winText({ secs: this.secs, moves: this.moves }));
       $(containerElement).addClass("glow-2");
+      if (typeof this.onGameOver === "function") {
+        this.onGameOver({ secs: this.secs, moves: this.moves, message: LANG[this.language].winText({ secs: this.secs, moves: this.moves }) });
+      }
       this.moves = 0;
       this.gameStatus = GAME_STATUS.STOPPED;
       $(".pieces").unbind("click");
