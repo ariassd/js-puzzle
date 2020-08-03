@@ -5,7 +5,7 @@ const GAME_STATUS = {
 };
 
 // class Puzzle
-function Puzzle(imageSize, imageUrl, language) {
+function Puzzle(imageSize, imageUrl, language, containerElement) {
   // Properties
   this.image = imageUrl;
   this.imageSize = imageSize;
@@ -22,12 +22,16 @@ function Puzzle(imageSize, imageUrl, language) {
   this.pieceHeight = Math.ceil(imageSize.height / this.cols);
   this.pieces = [];
 
+  this.timerInterval;
+
   /**
    * Build and set positions to each piece in the puzzle
    *
    */
   this.buildStage = function () {
-    let colors = Object.values(constants.PiecesColors);
+    $(containerElement).empty();
+    this.pieces = [];
+    let colors = Object.values(JSON.parse(JSON.stringify(constants.PiecesColors)));
     let currPos = 0;
     for (let indexRow = 0; indexRow < this.rows; indexRow++) {
       for (let indexCol = 0; indexCol < this.cols; indexCol++) {
@@ -48,7 +52,7 @@ function Puzzle(imageSize, imageUrl, language) {
       $new.css("background-position", `${(value.left - this.paddingTopLeft) * -1} ${(value.top - this.paddingTopLeft) * -1}`);
       $new.css(`:before`, `color: ${value.color}`);
 
-      const e = $("article").append($new);
+      const e = $(containerElement).append($new);
     });
   };
 
@@ -62,8 +66,8 @@ function Puzzle(imageSize, imageUrl, language) {
     });
 
     if (this.pieces.filter((i) => !i.isOk).length === 0) {
-      $("p").text(LANG[this.language].winText({ secs: this.secs, moves: this.moves }));
-      $("article").addClass("glow-2");
+      $("p.message").text(LANG[this.language].winText({ secs: this.secs, moves: this.moves }));
+      $(containerElement).addClass("glow-2");
       this.moves = 0;
       this.gameStatus = GAME_STATUS.STOPPED;
       $(".pieces").unbind("click");
@@ -120,11 +124,25 @@ function Puzzle(imageSize, imageUrl, language) {
     this.initAction();
 
     this.gameStatus = GAME_STATUS.PLAYING;
-    setInterval(() => {
+    clearInterval(this.timerInterval);
+    this.timerInterval = setInterval(() => {
       if (this.gameStatus === GAME_STATUS.PLAYING) {
         $(".time").text(LANG[this.language].timeText({ secs: this.secs }));
         this.secs++;
       }
     }, 0);
+  };
+
+  this.reset = function () {
+    this.secs = 0;
+    this.moves = 0;
+    this.pieces = [];
+    $(containerElement).empty();
+    clearInterval(this.timerInterval);
+    this.start();
+  };
+
+  this.destruct = function () {
+    clearInterval(this.timerInterval);
   };
 }

@@ -1,6 +1,7 @@
 LANG = {
   EN: {
-    winText: template`You have solved the puzzle in ${"seconds"} seconds using ${"moves"} moves!!`,
+    winText: template`You have solved the puzzle in ${"secs"} seconds using ${"moves"} moves!!`,
     timeText: template`Time: ${"secs"}`,
+    restartButtonText: template`Restart`,
   },
 };
