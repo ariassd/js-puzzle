@@ -16,9 +16,12 @@ function Puzzle({ imageSize, imageUrl, language, containerElement, onGameOver })
   this.cols = 3;
   this.rows = 3;
 
+  console.log();
+
   this.paddingTopLeft = 0;
-  this.pieceWith = Math.ceil(imageSize.width / this.rows);
-  this.pieceHeight = Math.ceil(imageSize.height / this.cols);
+  this.pieceWith = Math.ceil(containerElement.width() / this.cols);
+  const newHeight = (imageSize.height * containerElement.width()) / imageSize.width;
+  this.pieceHeight = Math.ceil(newHeight / this.rows); // get proportions
   this.pieces = [];
   this.timerInterval;
 

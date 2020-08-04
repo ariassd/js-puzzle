@@ -8,7 +8,7 @@ $(document).ready(function () {
       imageSize: { width: imageSize.w, height: imageSize.h },
       imageUrl: image,
       language: lang,
-      containerElement: $("article"),
+      containerElement: $("#game"),
       onGameOver: (result) => {
         $("p.message").text(result.message);
         $(".gameover").show();
